@@ -26,10 +26,10 @@ public class SudokuSolve {
 			drawGrid();
 			populateBoardPos();
 			visBoard();
-			// boardPrintNice();
-			// StdOut.println("\n\n");
+			boardPrintNice();
+			StdOut.println("\n\n");
 			solveVis();
-			// boardPrintNice();
+			boardPrintNice();
 			visBoard();
 		}
 		StdOut.println("Solved");
@@ -57,13 +57,13 @@ public class SudokuSolve {
 	public static void highlightSquare(int row, int col) {
 		drawGrid();
 		StdDraw.setPenColor(StdDraw.RED);
-		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18);
+		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18.0);
 	}
 
 	public static void highlightSquareG(int row, int col) {
 		drawGrid();
 		StdDraw.setPenColor(StdDraw.GREEN);
-		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18);
+		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18.0);
 		StdDraw.show();
 		StdDraw.pause(GREENWAIT);
 	}
@@ -198,23 +198,18 @@ public class SudokuSolve {
 
 	public static boolean validRowsCols() {
 		for (int i = 0; i < 9; i++) {
-			boolean lsR[] = new boolean[9];
-			boolean lsC[] = new boolean[9];
+			boolean[] numsRow = new boolean[10];
+			boolean[] numsCol = new boolean[10];
 			for (int j = 0; j < 9; j++) {
 				int numR = board[i][j];
-				if (numR != 0) {
-					if (lsR[numR - 1]) {
-						return false;
-					}
-					lsR[numR - 1] = true;
-				}
+				if (numsRow[numR])
+					return false;
+
+				numsRow[numR] = numR != 0;
 				int numC = board[j][i];
-				if (numC != 0) {
-					if (lsC[numC - 1]) {
-						return false;
-					}
-					lsC[numC - 1] = true;
-				}
+				if (numsCol[numC])
+					return false;
+				numsCol[numC] = numC != 0;
 			}
 		}
 		return true;
