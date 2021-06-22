@@ -13,7 +13,7 @@ public class SudokuSolve {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		boolean textMode = false;
+		boolean textMode = true;
 		String filename = "sudoku2.txt";
 		populateBoard(filename);
 		if (textMode) {
@@ -236,28 +236,32 @@ public class SudokuSolve {
 	}
 
 	public static void boardPrint() {
+		String str = "";
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				StdOut.print(boardG[i][j] + " ");
+				str += boardG[i][j] + " ";
 			}
-			StdOut.println();
+			str += "\n";
 		}
+		StdOut.print(str);
 	}
 
 	public static void boardPrintNice() {
+		String str = "";
 		for (int i = 0; i < 9; i++) {
 			if (i % 3 == 0) {
-				StdOut.println("-------------------------");
+				str += "-------------------------\n";
 			}
 			for (int j = 0; j < 9; j++) {
 				if (j % 3 == 0) {
-					StdOut.print("| ");
+					str += "| ";
 				}
-				StdOut.print(boardG[i][j] + " ");
+				str += boardG[i][j] + " ";
 			}
-			StdOut.println("|");
+			str += "|\n";
 		}
-		StdOut.println("-------------------------");
+		str += "-------------------------\n";
+		StdOut.print(str);
 	}
 
 }
