@@ -3,8 +3,7 @@ import java.awt.Font;
 
 public class SudokuSolve {
 
-	public static int boardO[][] = new int[9][9];
-	public static int boardG[][] = new int[9][9];
+	public static int board[][] = new int[9][9];
 	public static boolean empty[][] = new boolean[9][9];
 	public static final int size = 180;
 	public static int boardPos[][][] = new int[9][9][2];
@@ -12,7 +11,6 @@ public class SudokuSolve {
 	public static final int greenSquareWait = 50;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		boolean textMode = true;
 		String filename = "sudoku2.txt";
 		populateBoard(filename);
@@ -85,13 +83,13 @@ public class SudokuSolve {
 			for (int j = 0; j < 9; j++) {
 				StdDraw.setPenColor(StdDraw.WHITE);
 				StdDraw.filledSquare(boardPos[i][j][0], boardPos[i][j][1], size / 18 - 4);
-				if (boardG[i][j] != 0) {
+				if (board[i][j] != 0) {
 					if (empty[i][j]) {
 						StdDraw.setPenColor(StdDraw.GRAY);
 					} else {
 						StdDraw.setPenColor(StdDraw.BLACK);
 					}
-					StdDraw.text(boardPos[i][j][0], boardPos[i][j][1], "" + boardG[i][j]);
+					StdDraw.text(boardPos[i][j][0], boardPos[i][j][1], "" + board[i][j]);
 				}
 			}
 		}
@@ -102,7 +100,7 @@ public class SudokuSolve {
 	public static boolean complete() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				if (boardG[i][j] == 0) {
+				if (board[i][j] == 0) {
 					return false;
 				}
 			}
@@ -115,7 +113,7 @@ public class SudokuSolve {
 		int nCol = 9;
 		for (int i = 0; i < 9 && nRow == 9; i++) {
 			for (int j = 0; j < 9 && nRow == 9; j++) {
-				if (boardG[i][j] == 0) {
+				if (board[i][j] == 0) {
 					nRow = i;
 					nCol = j;
 				}
@@ -125,7 +123,7 @@ public class SudokuSolve {
 			return;
 		}
 		for (int i = 1; i < 10; i++) {
-			boardG[nRow][nCol] = i;
+			board[nRow][nCol] = i;
 			highlightSquare(nRow, nCol);
 			visBoard();
 			if (validBoard()) {
@@ -136,7 +134,7 @@ public class SudokuSolve {
 				drawGrid();
 				return;
 			}
-			boardG[nRow][nCol] = 0;
+			board[nRow][nCol] = 0;
 		}
 		return;
 	}
@@ -146,7 +144,7 @@ public class SudokuSolve {
 		int nCol = 9;
 		for (int i = 0; i < 9 && nRow == 9; i++) {
 			for (int j = 0; j < 9 && nRow == 9; j++) {
-				if (boardG[i][j] == 0) {
+				if (board[i][j] == 0) {
 					nRow = i;
 					nCol = j;
 					break;
@@ -157,14 +155,14 @@ public class SudokuSolve {
 			return;
 		}
 		for (int i = 1; i < 10; i++) {
-			boardG[nRow][nCol] = i;
+			board[nRow][nCol] = i;
 			if (validBoard()) {
 				solve();
 			}
 			if (complete()) {
 				return;
 			}
-			boardG[nRow][nCol] = 0;
+			board[nRow][nCol] = 0;
 		}
 		return;
 	}
@@ -188,7 +186,7 @@ public class SudokuSolve {
 		boolean ls[] = new boolean[9];
 		for (int i = sRow; i < sRow + 3; i++) {
 			for (int j = sCol; j < sCol + 3; j++) {
-				int num = boardG[i][j];
+				int num = board[i][j];
 				if (num != 0) {
 					if (ls[num - 1]) {
 						return false;
@@ -205,14 +203,14 @@ public class SudokuSolve {
 			boolean lsR[] = new boolean[9];
 			boolean lsC[] = new boolean[9];
 			for (int j = 0; j < 9; j++) {
-				int numR = boardG[i][j];
+				int numR = board[i][j];
 				if (numR != 0) {
 					if (lsR[numR - 1]) {
 						return false;
 					}
 					lsR[numR - 1] = true;
 				}
-				int numC = boardG[i][j];
+				int numC = board[i][j];
 				if (numC != 0) {
 					if (lsC[numC - 1]) {
 						return false;
@@ -228,18 +226,17 @@ public class SudokuSolve {
 		In in = new In(filename);
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				boardO[i][j] = in.readInt();
-				empty[i][j] = boardO[i][j] == 0;
+				board[i][j] = in.readInt();
+				empty[i][j] = board[i][j] == 0;
 			}
 		}
-		boardG = boardO.clone();
 	}
 
 	public static void boardPrint() {
 		String str = "";
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				str += boardG[i][j] + " ";
+				str += board[i][j] + " ";
 			}
 			str += "\n";
 		}
@@ -256,7 +253,7 @@ public class SudokuSolve {
 				if (j % 3 == 0) {
 					str += "| ";
 				}
-				str += boardG[i][j] + " ";
+				str += board[i][j] + " ";
 			}
 			str += "|\n";
 		}
