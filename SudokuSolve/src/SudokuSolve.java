@@ -36,9 +36,6 @@ public class SudokuSolve {
 			visBoard();
 			StdOut.println("Solved");
 		}
-//		Stopwatch sw = new Stopwatch();
-
-//		StdOut.println(sw.elapsedTime());
 	}
 
 	public static void drawGrid() {
@@ -63,16 +60,11 @@ public class SudokuSolve {
 		drawGrid();
 		StdDraw.setPenColor(StdDraw.RED);
 		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], size / 18);
-//		StdDraw.show();
 	}
 
-	public static void highlightSquare(int row, int col, boolean red) {
+	public static void highlightSquareG(int row, int col) {
 		drawGrid();
-		if (red) {
-			StdDraw.setPenColor(StdDraw.RED);
-		} else {
-			StdDraw.setPenColor(StdDraw.GREEN);
-		}
+		StdDraw.setPenColor(StdDraw.GREEN);
 		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], size / 18);
 		StdDraw.show();
 		StdDraw.pause(greenSquareWait);
@@ -99,8 +91,7 @@ public class SudokuSolve {
 					} else {
 						StdDraw.setPenColor(StdDraw.BLACK);
 					}
-					String str = "" + boardG[i][j];
-					StdDraw.text(boardPos[i][j][0], boardPos[i][j][1], str);
+					StdDraw.text(boardPos[i][j][0], boardPos[i][j][1], "" + boardG[i][j]);
 				}
 			}
 		}
@@ -137,9 +128,8 @@ public class SudokuSolve {
 			boardG[nRow][nCol] = i;
 			highlightSquare(nRow, nCol);
 			visBoard();
-
 			if (validBoard()) {
-				highlightSquare(nRow, nCol, false);
+				highlightSquareG(nRow, nCol);
 				solveVis();
 			}
 			if (complete()) {
@@ -228,22 +218,6 @@ public class SudokuSolve {
 						return false;
 					}
 					lsC[numC - 1] = true;
-				}
-			}
-		}
-		return true;
-	}
-
-	public static boolean validCols() {
-		for (int i = 0; i < 9; i++) {
-			boolean ls[] = new boolean[9];
-			for (int j = 0; j < 9; j++) {
-				int num = boardG[j][i];
-				if (num != 0) {
-					if (ls[num - 1]) {
-						return false;
-					}
-					ls[num - 1] = true;
 				}
 			}
 		}
