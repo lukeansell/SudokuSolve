@@ -8,24 +8,37 @@ public class SudokuSolve {
 	public static boolean empty[][] = new boolean[9][9];
 	public static final int size = 180;
 	public static int boardPos[][][] = new int[9][9][2];
+	public static final int displayDelay = 50;
+	public static final int greenSquareWait = 50;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Stopwatch sw = new Stopwatch();
-		Font font = new Font("Arial", Font.BOLD, 24);
-		StdDraw.enableDoubleBuffering();
+		boolean textMode = false;
+		String filename = "sudoku2.txt";
+		populateBoard(filename);
+		if (textMode) {
+			boardPrintNice();
+			StdOut.println();
+			solve();
+			boardPrintNice();
+		} else {
+			Font font = new Font("Arial", Font.BOLD, 24);
+			StdDraw.enableDoubleBuffering();
 
-		StdDraw.setFont(font);
-		populateBoard("sudoku2.txt");
-		drawGrid();
-		populateBoardPos();
-		visBoard();
-		boardPrintNice();
-		StdOut.println("\n\n");
-		solveVis();
-		boardPrintNice();
-//		visBoard();
-		StdOut.println(sw.elapsedTime());
+			StdDraw.setFont(font);
+			drawGrid();
+			populateBoardPos();
+			visBoard();
+//			boardPrintNice();
+//			StdOut.println("\n\n");
+			solveVis();
+//			boardPrintNice();
+			visBoard();
+			StdOut.println("Solved");
+		}
+//		Stopwatch sw = new Stopwatch();
+
+//		StdOut.println(sw.elapsedTime());
 	}
 
 	public static void drawGrid() {
@@ -62,7 +75,7 @@ public class SudokuSolve {
 		}
 		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], size / 18);
 		StdDraw.show();
-		StdDraw.pause(50);
+		StdDraw.pause(greenSquareWait);
 	}
 
 	public static void populateBoardPos() {
@@ -71,7 +84,6 @@ public class SudokuSolve {
 			for (int j = 0; j < 9; j++) {
 				boardPos[i][j][1] = size - (i + 1) * s + s / 2;
 				boardPos[i][j][0] = (j + 1) * s - s / 2;
-//				StdDraw.text(boardPos[i][j][0], boardPos[i][j][1], "" + (i * 9 + j));
 			}
 		}
 	}
@@ -81,7 +93,7 @@ public class SudokuSolve {
 			for (int j = 0; j < 9; j++) {
 				StdDraw.setPenColor(StdDraw.WHITE);
 				StdDraw.filledSquare(boardPos[i][j][0], boardPos[i][j][1], size / 18 - 4);
-				if (boardG[i][j] != 0) { 
+				if (boardG[i][j] != 0) {
 					if (empty[i][j]) {
 						StdDraw.setPenColor(StdDraw.GRAY);
 					} else {
@@ -93,7 +105,7 @@ public class SudokuSolve {
 			}
 		}
 		StdDraw.show();
-		StdDraw.pause(150);
+		StdDraw.pause(displayDelay);
 	}
 
 	public static boolean complete() {
