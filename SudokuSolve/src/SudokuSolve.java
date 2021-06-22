@@ -3,44 +3,44 @@ import java.awt.Font;
 
 public class SudokuSolve {
 
-	public static int board[][] = new int[9][9];
-	public static boolean empty[][] = new boolean[9][9];
-	public static final int size = 180;
-	public static int boardPos[][][] = new int[9][9][2];
-	public static final int displayDelay = 50;
-	public static final int greenSquareWait = 50;
+	private static int[][] board = new int[9][9];
+	private static boolean[][] empty = new boolean[9][9];
+	private static final int SIZE = 180;
+	private static int[][][] boardPos = new int[9][9][2];
+	private static final int DISPLAYDELAY = 0;
+	private static final int GREENWAIT = 0;
 
 	public static void main(String[] args) {
-		boolean textMode = true;
-		String filename = "sudoku2.txt";
+		final boolean textMode = true;
+		String filename = "sudoku3.txt";
 		populateBoard(filename);
+		Stopwatch sw = new Stopwatch();
 		if (textMode) {
 			boardPrintNice();
 			StdOut.println();
 			solve();
 			boardPrintNice();
 		} else {
-			Font font = new Font("Arial", Font.BOLD, 24);
 			StdDraw.enableDoubleBuffering();
-
-			StdDraw.setFont(font);
+			StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
 			drawGrid();
 			populateBoardPos();
 			visBoard();
-//			boardPrintNice();
-//			StdOut.println("\n\n");
+			// boardPrintNice();
+			// StdOut.println("\n\n");
 			solveVis();
-//			boardPrintNice();
+			// boardPrintNice();
 			visBoard();
-			StdOut.println("Solved");
 		}
+		StdOut.println("Solved");
+		StdOut.println(sw.elapsedTime());
 	}
 
 	public static void drawGrid() {
-		StdDraw.setXscale(0, size);
-		StdDraw.setYscale(0, size);
+		StdDraw.setXscale(0, SIZE);
+		StdDraw.setYscale(0, SIZE);
 		StdDraw.setPenColor(StdDraw.BLACK);
-		int s = size / 9;
+		int s = SIZE / 9;
 		StdDraw.setPenRadius(0.004);
 		StdDraw.line(0, 180, 180, 180);
 		for (int i = 0; i < 9; i++) {
@@ -48,8 +48,8 @@ public class SudokuSolve {
 			if (i % 3 == 0) {
 				StdDraw.setPenRadius(0.008);
 			}
-			StdDraw.line(0, i * s, size, i * s);
-			StdDraw.line(i * s, 0, i * s, size);
+			StdDraw.line(0, i * s, SIZE, i * s);
+			StdDraw.line(i * s, 0, i * s, SIZE);
 		}
 		StdDraw.show();
 	}
@@ -57,22 +57,22 @@ public class SudokuSolve {
 	public static void highlightSquare(int row, int col) {
 		drawGrid();
 		StdDraw.setPenColor(StdDraw.RED);
-		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], size / 18);
+		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18);
 	}
 
 	public static void highlightSquareG(int row, int col) {
 		drawGrid();
 		StdDraw.setPenColor(StdDraw.GREEN);
-		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], size / 18);
+		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18);
 		StdDraw.show();
-		StdDraw.pause(greenSquareWait);
+		StdDraw.pause(GREENWAIT);
 	}
 
 	public static void populateBoardPos() {
-		int s = size / 9;
+		int s = SIZE / 9;
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				boardPos[i][j][1] = size - (i + 1) * s + s / 2;
+				boardPos[i][j][1] = SIZE - (i + 1) * s + s / 2;
 				boardPos[i][j][0] = (j + 1) * s - s / 2;
 			}
 		}
@@ -82,7 +82,7 @@ public class SudokuSolve {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				StdDraw.setPenColor(StdDraw.WHITE);
-				StdDraw.filledSquare(boardPos[i][j][0], boardPos[i][j][1], size / 18 - 4);
+				StdDraw.filledSquare(boardPos[i][j][0], boardPos[i][j][1], SIZE / 18 - 4);
 				if (board[i][j] != 0) {
 					if (empty[i][j]) {
 						StdDraw.setPenColor(StdDraw.GRAY);
@@ -94,7 +94,7 @@ public class SudokuSolve {
 			}
 		}
 		StdDraw.show();
-		StdDraw.pause(displayDelay);
+		StdDraw.pause(DISPLAYDELAY);
 	}
 
 	public static boolean complete() {
@@ -210,7 +210,7 @@ public class SudokuSolve {
 					}
 					lsR[numR - 1] = true;
 				}
-				int numC = board[i][j];
+				int numC = board[j][i];
 				if (numC != 0) {
 					if (lsC[numC - 1]) {
 						return false;
