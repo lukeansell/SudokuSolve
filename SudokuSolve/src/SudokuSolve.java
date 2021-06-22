@@ -136,7 +136,6 @@ public class SudokuSolve {
 			}
 			board[nRow][nCol] = 0;
 		}
-		return;
 	}
 
 	public static void solve() {
@@ -164,7 +163,6 @@ public class SudokuSolve {
 			}
 			board[nRow][nCol] = 0;
 		}
-		return;
 	}
 
 	public static boolean validBoard() {
