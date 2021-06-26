@@ -20,7 +20,7 @@ public class SudokuSolve {
 		populateBoardPos();
 		drawGrid();
 
-		String filename = "sudoku1.txt";
+		String filename = args[0];
 		populateBoard(filename, boardTest, emptyTest);
 		Stopwatch sw = new Stopwatch();
 		StdOut.println(checkSolvable(boardTest));
@@ -219,12 +219,7 @@ public class SudokuSolve {
 
 	public static boolean checkSolvable(int boardT[][]) {
 		int copy[][] = boardCopy(boardT);
-		// int copyOg[][] = boardCopy(boardT);
 		solve(copy);
-		// boardPrintNice(boardT);
-		// boardPrintNice(copy);
-		// boardPrintNice(copyOg);
-		// return !sameBoard(copyOg, copy);
 		return complete(copy);
 	}
 
