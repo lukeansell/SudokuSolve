@@ -9,30 +9,39 @@ public class SudokuSolve {
 	private static int[][][] boardPos = new int[9][9][2];
 	private static final int DISPLAYDELAY = 0;
 	private static final int GREENWAIT = 0;
+	private static final int KEYCODE_ENTER = 10;
 
 	public static void main(String[] args) {
-		final boolean textMode = true;
-		String filename = "sudoku3.txt";
-		populateBoard(filename);
+		final boolean textMode = false;
+		StdDraw.enableDoubleBuffering();
+		StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
+		populateBoardPos();
+		drawGrid();
+		// String filename = "sudoku3.txt";
+		// populateBoard(filename);
 		Stopwatch sw = new Stopwatch();
-		if (textMode) {
-			boardPrintNice();
-			StdOut.println();
-			solve();
-			boardPrintNice();
-		} else {
-			StdDraw.enableDoubleBuffering();
-			StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
-			drawGrid();
-			populateBoardPos();
-			visBoard();
-			boardPrintNice();
-			StdOut.println("\n\n");
-			solveVis();
-			boardPrintNice();
-			visBoard();
-		}
-		StdOut.println("Solved");
+
+		createBoard();
+		boardPrintNice();
+		visBoard();
+		// if (textMode) {
+		// boardPrintNice();
+		// StdOut.println();
+		// solve();
+		// boardPrintNice();
+		// } else {
+		// StdDraw.enableDoubleBuffering();
+		// StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
+		// drawGrid();
+		// populateBoardPos();
+		// visBoard();
+		// boardPrintNice();
+		// StdOut.println("\n\n");
+		// solveVis();
+		// boardPrintNice();
+		// visBoard();
+		// }
+		// StdOut.println("Solved");
 		StdOut.println(sw.elapsedTime());
 	}
 
@@ -252,6 +261,60 @@ public class SudokuSolve {
 		}
 		str += "-------------------------\n";
 		StdOut.print(str);
+	}
+
+	public static void createBoard() {
+		boolean exit = false;
+		int i = 0;
+		int j = 0;
+		while (!exit) {
+			StdOut.println("i: " + i + " j: " + j);
+			highlightSquare(i, j);
+			StdDraw.show();
+			while (!StdDraw.hasNextKeyTyped() && !exit) {
+				exit = StdDraw.isKeyPressed(KEYCODE_ENTER);
+			}
+			if (StdDraw.hasNextKeyTyped()) {
+				char ch = StdDraw.nextKeyTyped();
+				switch (ch) {
+					case 'w':
+						i--;
+						break;
+					case 's':
+						i++;
+						break;
+					case 'a':
+						j--;
+						break;
+					case 'd':
+						j++;
+						break;
+					default:
+						String in = "" + ch;
+						try {
+							int num = Integer.parseInt(in);
+							board[i][j] = num;
+							// StdOut.println(board[i][j]);
+							// boardPrint();
+							visBoard();
+							i = i + j / 9;
+							j = (j + 9) % 9;
+
+							if (j < 8) {
+								j++;
+							} else {
+								i++;
+								j = 0;
+							}
+						} catch (Exception e) {
+							StdOut.println("Invalid input");
+						}
+				}
+				i = (i + 9) % 9;
+				j = (j + 9) % 9;
+			}
+		}
+
 	}
 
 }
