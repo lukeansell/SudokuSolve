@@ -224,12 +224,10 @@ public class SudokuSolve {
 	}
 
 	public static boolean sameBoard(int boardT[][], int boardS[][]) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
+		for (int i = 0; i < 9; i++) 
+			for (int j = 0; j < 9; j++) 
 				if (boardT[i][j] != boardS[i][j])
 					return false;
-			}
-		}
 		return true;
 	}
 
