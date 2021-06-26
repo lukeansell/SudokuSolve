@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "java",
             "name": "Attach",
@@ -71,10 +72,19 @@
         },
         {
             "type": "java",
+            "name": "SudokuSolve sudokuImp2.txt",
+            "request": "launch",
+            "mainClass": "SudokuSolve",
+            "projectName": "SudokuSolve",
+            "args": "sudokuImp2.txt"
+        },
+        {
+            "type": "java",
             "name": "SudokuSolve",
             "request": "launch",
             "mainClass": "SudokuSolve",
             "projectName": "SudokuSolve"
         }
+       
     ]
 }
