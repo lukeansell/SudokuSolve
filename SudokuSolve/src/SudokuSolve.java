@@ -20,12 +20,11 @@ public class SudokuSolve {
 	public static void main(String[] args) {
 		Stopwatch sw = new Stopwatch();
 		final boolean textMode = false;
-		// visMessage("hello");
-		visClearMsg();
 		if (!textMode) {
 			initVis();
 			visMessage("hello");
 		}
+
 		if (args.length == 0) {
 			createBoard();
 		} else {
@@ -52,6 +51,7 @@ public class SudokuSolve {
 				if (!checkSolvable(board))
 					msg = "reset board";
 				resetBoard();
+
 				if (vis == 1) {
 					visMessage(msg + " vis solve");
 					solveVis();
@@ -61,9 +61,9 @@ public class SudokuSolve {
 					visBoard();
 				}
 			}
-		} else {
+		} else
 			StdOut.println("cannot be solved");
-		}
+
 		StdOut.println(sw.elapsedTime() + "s");
 	}
 
@@ -504,7 +504,6 @@ public class SudokuSolve {
 						board[i][j] = num;
 						boolean validBoard = validBoard();
 						boolean solvable = checkSolvable(board);
-						StdOut.println(validBoard && solvable);
 						if (validBoard && solvable) {
 							j++;
 							i = (i + j / 9 + 9) % 9;
@@ -512,9 +511,9 @@ public class SudokuSolve {
 						} else {
 							board[i][j] = 0;
 							if (!validBoard)
-								StdOut.println("Makes board invalid");
+								StdOut.println("Makes the board invalid");
 							else
-								StdOut.println("Unsolvable");
+								StdOut.println("Makes the board unsolvable");
 						}
 						visBoard();
 
@@ -527,12 +526,9 @@ public class SudokuSolve {
 	}
 
 	public static boolean playBoard() {
-		// StdOut.println("here2");
 		boardSolved = boardCopy(board);
 		solve(boardSolved);
-		// StdOut.println("here2");
 		boardPrintNice(boardSolved);
-		boolean solved = false;
 		int i = 0;
 		int j = 0;
 		Color c = StdDraw.GREEN;
@@ -565,20 +561,17 @@ public class SudokuSolve {
 					j = j == 8 ? 8 : j + 1;
 					break;
 				default:
-					String in = "" + ch;
-					if (empty[i][j]) {
+					if (empty[i][j])
 						try {
-							int num = Integer.parseInt(in);
+							int num = Integer.parseInt("" + ch);
 							board[i][j] = num;
 							visBoard();
-
 						} catch (Exception e) {
 							StdOut.println("Invalid input");
 						}
-					}
+
 			}
 		}
-
 		visMessage("Winnner!!");
 		return true;
 	}
@@ -586,7 +579,7 @@ public class SudokuSolve {
 	public static boolean isCorrect(int boardT[][], int boardS[][]) {
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
-				if (boardT[i][j] != boardS[i][j] && boardT[i][j] != 0)
+				if (isCorrect(boardT[i][j], boardS[i][j]))
 					return false;
 
 		return true;
