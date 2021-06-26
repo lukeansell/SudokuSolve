@@ -14,19 +14,48 @@ public class SudokuSolve {
 	private static final int KEYCODE_ENTER = 10;
 
 	public static void main(String[] args) {
-		final boolean textMode = false;
-		StdDraw.enableDoubleBuffering();
-		StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
-		populateBoardPos();
-		drawGrid();
-
-		String filename = args[0];
-		populateBoard(filename, boardTest, emptyTest);
 		Stopwatch sw = new Stopwatch();
-		StdOut.println(checkSolvable(boardTest));
+		final boolean textMode = false;
+		if(!textMode){
+			initVis();
+		}
+		if (args.length == 0 ) {
+			createBoard();
+		} else {
+			String filename = args[0];
+			populateBoard(filename);
+		}
+		// if (textMode) {
+		// boardPrintNice();
+		// solve();
+		// boardPrintNice();
+		// } else if (checkSolvable(board)) {
+
+		// }
+		if (checkSolvable(board)) {
+			boardPrintNice();
+			if (!textMode) {
+				
+				solveVis();
+			} else {
+				solve();
+				boardPrintNice();
+			}
+		} else {
+			StdOut.println("cannot be solved");
+		}
+		// populateBoard(filename, boardTest, emptyTest);
+
+		// boardPrintNice();
+		// solveVis();
+
+		// StdOut.println(checkSolvable(board));
 		// createBoard();
-		boardPrintNice(boardTest);
-		visBoard();
+		// boardPrintNice(board);
+		// solve();
+		// boardPrintNice();
+		// visBoard();
+
 		// if (textMode) {
 		// boardPrintNice();
 		// StdOut.println();
@@ -46,6 +75,13 @@ public class SudokuSolve {
 		// }
 		// StdOut.println("Solved");
 		StdOut.println(sw.elapsedTime());
+	}
+
+	public static void initVis() {
+		StdDraw.enableDoubleBuffering();
+		StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
+		populateBoardPos();
+		drawGrid();
 	}
 
 	public static void drawGrid() {
@@ -147,10 +183,11 @@ public class SudokuSolve {
 		}
 		for (int i = 1; i < 10; i++) {
 			board[nRow][nCol] = i;
-			highlightSquare(nRow, nCol);
-			visBoard();
+			// highlightSquare(nRow, nCol);
+			// visBoard();
 			if (validBoard()) {
 				highlightSquareG(nRow, nCol);
+				visBoard();
 				solveVis();
 			}
 			if (complete()) {
@@ -201,31 +238,33 @@ public class SudokuSolve {
 				}
 			}
 		}
-		if (nCol == 9) {
+
+		if (nCol == 9)
 			return;
-		}
+
 		for (int i = 1; i < 10; i++) {
 			boardS[nRow][nCol] = i;
-			if (validBoard(boardS)) {
+			if (validBoard(boardS))
 				solve(boardS);
-			}
-			if (complete(boardS)) {
+			if (complete(boardS))
 				return;
-			}
 			boardS[nRow][nCol] = 0;
 		}
 
 	}
 
 	public static boolean checkSolvable(int boardT[][]) {
+		// StdOut.print("check solve ");
+		// Stopwatch sw = new Stopwatch();
 		int copy[][] = boardCopy(boardT);
 		solve(copy);
+		// StdOut.println(sw.elapsedTime());
 		return complete(copy);
 	}
 
 	public static boolean sameBoard(int boardT[][], int boardS[][]) {
-		for (int i = 0; i < 9; i++) 
-			for (int j = 0; j < 9; j++) 
+		for (int i = 0; i < 9; i++)
+			for (int j = 0; j < 9; j++)
 				if (boardT[i][j] != boardS[i][j])
 					return false;
 		return true;
@@ -341,12 +380,12 @@ public class SudokuSolve {
 
 	public static void populateBoard(String filename) {
 		In in = new In(filename);
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++) {
 				board[i][j] = in.readInt();
 				empty[i][j] = board[i][j] == 0;
 			}
-		}
+
 	}
 
 	public static void populateBoard(String filename, int boardT[][], boolean emptyT[][]) {
@@ -439,15 +478,19 @@ public class SudokuSolve {
 							board[i][j] = num;
 							// StdOut.println(board[i][j]);
 							// boardPrint();
-
-							boolean valid = validBoard();
-							if (valid) {
+							boolean validBoard = validBoard();
+							boolean solvable = checkSolvable(board);
+							StdOut.println(validBoard && solvable);
+							if (validBoard && solvable) {
 								j++;
 								i = (i + j / 9 + 9) % 9;
 								j = (j + 9) % 9;
 							} else {
-								StdOut.println("Makes board invalid");
 								board[i][j] = 0;
+								if (!validBoard)
+									StdOut.println("Makes board invalid");
+								else
+									StdOut.println("Unsolvable");
 							}
 							visBoard();
 
