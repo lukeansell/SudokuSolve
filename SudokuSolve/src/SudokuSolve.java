@@ -4,9 +4,7 @@ import java.awt.Font;
 public class SudokuSolve {
 
 	private static int[][] board = new int[9][9];
-	private static int[][] boardTest = new int[9][9];
 	private static boolean[][] empty = new boolean[9][9];
-	private static boolean[][] emptyTest = new boolean[9][9];
 	private static final int SIZE = 180;
 	private static int[][][] boardPos = new int[9][9][2];
 	private static final int DISPLAYDELAY = 0;
@@ -15,27 +13,21 @@ public class SudokuSolve {
 
 	public static void main(String[] args) {
 		Stopwatch sw = new Stopwatch();
-		final boolean textMode = false;
-		if(!textMode){
+		final boolean textMode = true;
+		if (!textMode) {
 			initVis();
 		}
-		if (args.length == 0 ) {
+		if (args.length == 0) {
 			createBoard();
 		} else {
 			String filename = args[0];
 			populateBoard(filename);
 		}
-		// if (textMode) {
-		// boardPrintNice();
-		// solve();
-		// boardPrintNice();
-		// } else if (checkSolvable(board)) {
 
-		// }
 		if (checkSolvable(board)) {
 			boardPrintNice();
 			if (!textMode) {
-				
+
 				solveVis();
 			} else {
 				solve();
@@ -44,37 +36,7 @@ public class SudokuSolve {
 		} else {
 			StdOut.println("cannot be solved");
 		}
-		// populateBoard(filename, boardTest, emptyTest);
-
-		// boardPrintNice();
-		// solveVis();
-
-		// StdOut.println(checkSolvable(board));
-		// createBoard();
-		// boardPrintNice(board);
-		// solve();
-		// boardPrintNice();
-		// visBoard();
-
-		// if (textMode) {
-		// boardPrintNice();
-		// StdOut.println();
-		// solve();
-		// boardPrintNice();
-		// } else {
-		// StdDraw.enableDoubleBuffering();
-		// StdDraw.setFont(new Font("Arial", Font.BOLD, 24));
-		// drawGrid();
-		// populateBoardPos();
-		// visBoard();
-		// boardPrintNice();
-		// StdOut.println("\n\n");
-		// solveVis();
-		// boardPrintNice();
-		// visBoard();
-		// }
-		// StdOut.println("Solved");
-		StdOut.println(sw.elapsedTime());
+		StdOut.println(sw.elapsedTime() + "s");
 	}
 
 	public static void initVis() {
@@ -183,8 +145,8 @@ public class SudokuSolve {
 		}
 		for (int i = 1; i < 10; i++) {
 			board[nRow][nCol] = i;
-			// highlightSquare(nRow, nCol);
-			// visBoard();
+			highlightSquare(nRow, nCol);
+			visBoard();
 			if (validBoard()) {
 				highlightSquareG(nRow, nCol);
 				visBoard();
@@ -476,8 +438,6 @@ public class SudokuSolve {
 						try {
 							int num = Integer.parseInt(in);
 							board[i][j] = num;
-							// StdOut.println(board[i][j]);
-							// boardPrint();
 							boolean validBoard = validBoard();
 							boolean solvable = checkSolvable(board);
 							StdOut.println(validBoard && solvable);
