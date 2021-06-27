@@ -2,8 +2,11 @@
 import java.awt.*;
 // import java.awt.Color.*;
 
+import jdk.javadoc.internal.tool.resources.javadoc_ja;
+
 public class SudokuSolve {
 
+	private static final String LINE = "-------------------------\n";
 	private static int[][] board = new int[9][9];
 	private static int[][] boardSolved;
 	private static boolean[][] empty = new boolean[9][9];
@@ -89,7 +92,6 @@ public class SudokuSolve {
 	public static void drawGrid() {
 		StdDraw.setXscale(0, SIZE);
 		StdDraw.setYscale(0, SIZE + 10);
-		// StdDraw.setCanvasSize(SIZE*10, SIZE * 10);
 		StdDraw.setPenColor(StdDraw.BLACK);
 		int s = SIZE / 9;
 		StdDraw.setPenRadius(0.004);
@@ -437,7 +439,7 @@ public class SudokuSolve {
 		String str = "";
 		for (int i = 0; i < 9; i++) {
 			if (i % 3 == 0) {
-				str += "-------------------------\n";
+				str += LINE;
 			}
 			for (int j = 0; j < 9; j++) {
 				if (j % 3 == 0) {
@@ -447,7 +449,7 @@ public class SudokuSolve {
 			}
 			str += "|\n";
 		}
-		str += "-------------------------\n";
+		str += LINE;
 		StdOut.print(str);
 	}
 
@@ -455,7 +457,7 @@ public class SudokuSolve {
 		String str = "";
 		for (int i = 0; i < 9; i++) {
 			if (i % 3 == 0) {
-				str += "-------------------------\n";
+				str += LINE;
 			}
 			for (int j = 0; j < 9; j++) {
 				if (j % 3 == 0) {
@@ -465,58 +467,43 @@ public class SudokuSolve {
 			}
 			str += "|\n";
 		}
-		str += "-------------------------\n";
+		str += LINE;
 		StdOut.print(str);
 	}
 
 	public static void createBoard() {
-		boolean exit = false;
 		int i = 0;
 		int j = 0;
-		while (!exit) {
-			// StdOut.println("i: " + i + " j: " + j);
+		while (true) {
 			highlightSquare(i, j);
 			StdDraw.show();
-			while (!StdDraw.hasNextKeyTyped() && !exit) {
+			while (!StdDraw.hasNextKeyTyped())
 				if (StdDraw.isKeyPressed(KEYCODE_ENTER)) {
 					populateEmpty();
 					return;
 				}
-			}
+
 			char ch = StdDraw.nextKeyTyped();
 			switch (ch) {
 				case 'w':
-					i = (i == 0) ? 0 : i - 1;
+					i = decrease(i);
 					break;
 				case 's':
-					i = (i == 8) ? 8 : i + 1;
+					i = increase(i);
 					break;
 				case 'a':
-					j = (j == 0) ? 0 : j - 1;
+					j = decrease(j);
 					break;
 				case 'd':
-					j = j == 8 ? 8 : j + 1;
+					j = increase(j);
 					break;
 				default:
-					String in = "" + ch;
 					try {
-						int num = Integer.parseInt(in);
-						board[i][j] = num;
-						boolean validBoard = validBoard();
-						boolean solvable = checkSolvable(board);
-						if (validBoard && solvable) {
+						if (testAddToBoard(i, j, ch)) {
 							j++;
 							i = (i + j / 9 + 9) % 9;
 							j = (j + 9) % 9;
-						} else {
-							board[i][j] = 0;
-							if (!validBoard)
-								StdOut.println("Makes the board invalid");
-							else
-								StdOut.println("Makes the board unsolvable");
 						}
-						visBoard();
-
 					} catch (Exception e) {
 						StdOut.println("Invalid input");
 					}
@@ -525,40 +512,65 @@ public class SudokuSolve {
 
 	}
 
+	public static boolean testAddToBoard(int row, int col, char ch) {
+		String in = "" + ch;
+		try {
+			int num = Integer.parseInt(in);
+			board[row][col] = num;
+			boolean validBoard = validBoard();
+			boolean solvable = checkSolvable(board);
+			if (!validBoard)
+				StdOut.println("Makes the board invalid");
+			else if (!solvable)
+				StdOut.println("Makes the board unsolvable");
+			if (!validBoard || !solvable)
+				board[row][col] = 0;
+			visBoard();
+			return validBoard && solvable;
+		} catch (Exception e) {
+			StdOut.println("Invalid input");
+		}
+		return false;
+
+	}
+
+	public static int increase(int num) {
+		return (num == 8) ? 8 : num + 1;
+	}
+
+	public static int decrease(int num) {
+		return (num == 0) ? 0 : num - 1;
+	}
+
 	public static boolean playBoard() {
 		boardSolved = boardCopy(board);
 		solve(boardSolved);
 		boardPrintNice(boardSolved);
 		int i = 0;
 		int j = 0;
-		Color c = StdDraw.GREEN;
+		Color c;
 		while (!complete()) {
-			if (isCorrect(board[i][j], boardSolved[i][j]))
-				c = StdDraw.GREEN;
-			else if (checkSolvable(board))
-				c = StdDraw.ORANGE;
-			else
-				c = StdDraw.RED;
+			c = highlightColor(i, j);
 
 			highlightSquare(i, j, c);
 			visBoard();
-			while (!StdDraw.hasNextKeyTyped()) {
+			while (!StdDraw.hasNextKeyTyped())
 				if (StdDraw.isKeyPressed(KEYCODE_ESC))
 					return false;
-			}
+
 			char ch = StdDraw.nextKeyTyped();
 			switch (ch) {
 				case 'w':
-					i = (i == 0) ? 0 : i - 1;
+					i = decrease(i);
 					break;
 				case 's':
-					i = (i == 8) ? 8 : i + 1;
+					i = increase(i);
 					break;
 				case 'a':
-					j = (j == 0) ? 0 : j - 1;
+					j = decrease(j);
 					break;
 				case 'd':
-					j = j == 8 ? 8 : j + 1;
+					j = increase(j);
 					break;
 				default:
 					if (empty[i][j])
@@ -574,6 +586,15 @@ public class SudokuSolve {
 		}
 		visMessage("Winnner!!");
 		return true;
+	}
+
+	public static Color highlightColor(int row, int col) {
+		if (isCorrect(board[row][col], boardSolved[row][col]))
+			return StdDraw.GREEN;
+		else if (checkSolvable(board))
+			return StdDraw.ORANGE;
+		else
+			return StdDraw.RED;
 	}
 
 	public static boolean isCorrect(int boardT[][], int boardS[][]) {
