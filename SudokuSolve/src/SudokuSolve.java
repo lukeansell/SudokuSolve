@@ -1,8 +1,5 @@
 
 import java.awt.*;
-// import java.awt.Color.*;
-
-import jdk.javadoc.internal.tool.resources.javadoc_ja;
 
 public class SudokuSolve {
 
@@ -30,6 +27,7 @@ public class SudokuSolve {
 
 		if (args.length == 0) {
 			createBoard();
+			waitForNoInput();
 		} else {
 			String filename = args[0];
 			populateBoard(filename);
@@ -37,7 +35,9 @@ public class SudokuSolve {
 
 		if (checkSolvable(board)) {
 			boardPrintNice();
+			waitForNoInput();
 			boolean win = playBoard();
+			waitForNoInput();
 			if (!win) {
 				visMessage("enter for vis solve, shift for instant solve");
 				int vis = -1;
@@ -80,29 +80,29 @@ public class SudokuSolve {
 	public static void visMessage(String text) {
 		visClearMsg();
 		StdDraw.setPenColor(StdDraw.BLACK);
-		StdDraw.text(SIZE / 2, SIZE + 5, text);
+		StdDraw.text(SIZE / 2.0, SIZE + 5.0, text);
 		StdDraw.show();
 	}
 
 	public static void visClearMsg() {
 		StdDraw.setPenColor(StdDraw.WHITE);
-		StdDraw.filledRectangle(SIZE / 2, SIZE + 5, SIZE / 2, 5);
+		StdDraw.filledRectangle(SIZE / 2.0, SIZE + 5.0, SIZE / 2.0, 5);
 	}
 
 	public static void drawGrid() {
 		StdDraw.setXscale(0, SIZE);
-		StdDraw.setYscale(0, SIZE + 10);
+		StdDraw.setYscale(0, SIZE + 10.0);
 		StdDraw.setPenColor(StdDraw.BLACK);
 		int s = SIZE / 9;
 		StdDraw.setPenRadius(0.004);
 		StdDraw.line(0, 180, 180, 180);
 		for (int i = 0; i < 9; i++) {
 			StdDraw.setPenRadius(0.004);
-			if (i % 3 == 0) {
+			if (i % 3 == 0)
 				StdDraw.setPenRadius(0.008);
-			}
-			StdDraw.line(0, i * s, SIZE, i * s);
-			StdDraw.line(i * s, 0, i * s, SIZE);
+			int pos = i * s;
+			StdDraw.line(0, pos, SIZE, pos);
+			StdDraw.line(pos, 0, pos, SIZE);
 		}
 		StdDraw.show();
 	}
@@ -146,7 +146,7 @@ public class SudokuSolve {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				StdDraw.setPenColor(StdDraw.WHITE);
-				StdDraw.filledSquare(boardPos[i][j][0], boardPos[i][j][1], SIZE / 18 - 4);
+				StdDraw.filledSquare(boardPos[i][j][0], boardPos[i][j][1], SIZE / 18.0 - 4.0);
 				if (board[i][j] != 0) {
 					if (empty[i][j]) {
 						StdDraw.setPenColor(StdDraw.GRAY);
@@ -172,7 +172,7 @@ public class SudokuSolve {
 		return validBoard();
 	}
 
-	public static boolean complete(int boardS[][]) {
+	public static boolean complete(int[][] boardS) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (boardS[i][j] == 0) {
@@ -242,7 +242,7 @@ public class SudokuSolve {
 
 	}
 
-	public static void solve(int boardS[][]) {
+	public static void solve(int[][] boardS) {
 		int nRow = 9;
 		int nCol = 9;
 		for (int i = 0; i < 9 && nRow == 9; i++) {
@@ -269,13 +269,13 @@ public class SudokuSolve {
 
 	}
 
-	public static boolean checkSolvable(int boardT[][]) {
-		int copy[][] = boardCopy(boardT);
+	public static boolean checkSolvable(int[][] boardT) {
+		int[][] copy = boardCopy(boardT);
 		solve(copy);
 		return complete(copy);
 	}
 
-	public static boolean sameBoard(int boardT[][], int boardS[][]) {
+	public static boolean sameBoard(int[][] boardT, int[][] boardS) {
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				if (boardT[i][j] != boardS[i][j])
@@ -283,7 +283,7 @@ public class SudokuSolve {
 		return true;
 	}
 
-	public static int[][] boardCopy(int boardT[][]) {
+	public static int[][] boardCopy(int[][] boardT) {
 		int[][] copy = new int[9][9];
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
@@ -295,7 +295,7 @@ public class SudokuSolve {
 		return validRowsCols() && validBlocks();
 	}
 
-	public static boolean validBoard(int boardT[][]) {
+	public static boolean validBoard(int[][] boardT) {
 		return validRowsCols(boardT) && validBlocks(boardT);
 	}
 
@@ -310,7 +310,7 @@ public class SudokuSolve {
 		return true;
 	}
 
-	public static boolean validBlocks(int boardT[][]) {
+	public static boolean validBlocks(int[][] boardT) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				if (!validBlock(i * 3, j * 3, boardT)) {
@@ -322,7 +322,7 @@ public class SudokuSolve {
 	}
 
 	public static boolean validBlock(int sRow, int sCol) {
-		boolean ls[] = new boolean[9];
+		boolean[] ls = new boolean[9];
 		for (int i = sRow; i < sRow + 3; i++) {
 			for (int j = sCol; j < sCol + 3; j++) {
 				int num = board[i][j];
@@ -337,8 +337,8 @@ public class SudokuSolve {
 		return true;
 	}
 
-	public static boolean validBlock(int sRow, int sCol, int boardT[][]) {
-		boolean ls[] = new boolean[9];
+	public static boolean validBlock(int sRow, int sCol, int[][] boardT) {
+		boolean[] ls = new boolean[9];
 		for (int i = sRow; i < sRow + 3; i++) {
 			for (int j = sCol; j < sCol + 3; j++) {
 				int num = boardT[i][j];
@@ -372,7 +372,7 @@ public class SudokuSolve {
 		return true;
 	}
 
-	public static boolean validRowsCols(int boardT[][]) {
+	public static boolean validRowsCols(int[][] boardT) {
 		for (int i = 0; i < 9; i++) {
 			boolean[] numsRow = new boolean[10];
 			boolean[] numsCol = new boolean[10];
@@ -414,7 +414,7 @@ public class SudokuSolve {
 				empty[i][j] = board[i][j] == 0;
 	}
 
-	public static void populateBoard(String filename, int boardT[][], boolean emptyT[][]) {
+	public static void populateBoard(String filename, int[][] boardT, boolean[][] emptyT) {
 		In in = new In(filename);
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -425,50 +425,48 @@ public class SudokuSolve {
 	}
 
 	public static void boardPrint() {
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				str += board[i][j] + " ";
-			}
-			str += "\n";
+			for (int j = 0; j < 9; j++)
+				str.append(board[i][j] + " ");
+
+			str.append("\n");
 		}
-		StdOut.print(str);
+		StdOut.print(str.toString());
 	}
 
 	public static void boardPrintNice() {
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < 9; i++) {
-			if (i % 3 == 0) {
-				str += LINE;
-			}
+			if (i % 3 == 0)
+				str.append(LINE);
 			for (int j = 0; j < 9; j++) {
-				if (j % 3 == 0) {
-					str += "| ";
-				}
-				str += board[i][j] + " ";
+				if (j % 3 == 0)
+					str.append("| ");
+				str.append(board[i][j] + " ");
 			}
-			str += "|\n";
+			str.append("|\n");
 		}
-		str += LINE;
-		StdOut.print(str);
+		str.append(LINE);
+		StdOut.print(str.toString());
 	}
 
-	public static void boardPrintNice(int boardT[][]) {
-		String str = "";
+	public static void boardPrintNice(int[][] boardT) {
+		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < 9; i++) {
-			if (i % 3 == 0) {
-				str += LINE;
-			}
+			if (i % 3 == 0)
+				str.append(LINE);
+
 			for (int j = 0; j < 9; j++) {
-				if (j % 3 == 0) {
-					str += "| ";
-				}
-				str += boardT[i][j] + " ";
+				if (j % 3 == 0)
+					str.append("| ");
+
+				str.append(boardT[i][j] + " ");
 			}
-			str += "|\n";
+			str.append("|\n");
 		}
-		str += LINE;
-		StdOut.print(str);
+		str.append(LINE);
+		StdOut.print(str.toString());
 	}
 
 	public static void createBoard() {
@@ -553,9 +551,10 @@ public class SudokuSolve {
 			c = highlightColor(i, j);
 
 			highlightSquare(i, j, c);
+			StdOut.println("i: " + i + " j: " + j);
 			visBoard();
 			while (!StdDraw.hasNextKeyTyped())
-				if (StdDraw.isKeyPressed(KEYCODE_ESC))
+				if (StdDraw.isKeyPressed(KEYCODE_ENTER))
 					return false;
 
 			char ch = StdDraw.nextKeyTyped();
@@ -597,7 +596,7 @@ public class SudokuSolve {
 			return StdDraw.RED;
 	}
 
-	public static boolean isCorrect(int boardT[][], int boardS[][]) {
+	public static boolean isCorrect(int[][] boardT, int[][] boardS) {
 		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 9; j++)
 				if (isCorrect(boardT[i][j], boardS[i][j]))
@@ -608,6 +607,13 @@ public class SudokuSolve {
 
 	public static boolean isCorrect(int t, int s) {
 		return t == s || t == 0;
+	}
+
+	public static void waitForNoInput() {
+		while (StdDraw.isKeyPressed(KEYCODE_ENTER) || StdDraw.isKeyPressed(KEYCODE_ESC)
+				|| StdDraw.isKeyPressed(KEYCODE_SHIFT)) {
+
+		}
 	}
 
 }
