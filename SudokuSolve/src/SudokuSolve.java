@@ -19,13 +19,11 @@ public class SudokuSolve {
 
 	public static void main(String[] args) {
 		Stopwatch sw = new Stopwatch();
-		final boolean textMode = false;
-		if (!textMode) {
-			initVis();
-			visMsg("hello");
-		}
+		initVis();
+		// visMsg("GLHF!");
 
 		if (args.length == 0) {
+			visMsg("Create board, enter when done");
 			createBoard();
 			waitForNoInput();
 		} else {
@@ -34,40 +32,45 @@ public class SudokuSolve {
 		}
 
 		if (checkSolvable(board)) {
+			visMsg("GLHF, enter to solve");
 			boardPrintNice();
 			waitForNoInput();
 			boolean win = playBoard();
-			waitForNoInput();
-			if (!win) {
-				visMsg("enter for vis solve, shift for instant solve");
-				int vis = -1;
-				while (vis == -1)
-					if (StdDraw.isKeyPressed(KEYCODE_ENTER))
-						vis = 1;
-					else if (StdDraw.isKeyPressed(KEYCODE_SHIFT))
-						vis = 0;
-					else if (StdDraw.isKeyPressed(KEYCODE_ESC))
-						System.exit(0);
-				visClearMsg();
-				String msg = "";
-
-				if (!checkSolvable(board))
-					msg = "reset board";
-				resetBoard();
-
-				if (vis == 1) {
-					visMsg(msg + " vis solve");
-					solveVis();
-					visMsg("Solved");
-				} else {
-					solve();
-					visBoard();
-				}
-			}
+			postPlay(win);
 		} else
 			StdOut.println("cannot be solved");
 
 		StdOut.println(sw.elapsedTime() + "s");
+	}
+
+	private static void postPlay(boolean win) {
+		waitForNoInput();
+		if (!win) {
+			visMsg("enter vis solve, shift instant solve");
+			int vis = -1;
+			while (vis == -1)
+				if (StdDraw.isKeyPressed(KEYCODE_ENTER))
+					vis = 1;
+				else if (StdDraw.isKeyPressed(KEYCODE_SHIFT))
+					vis = 0;
+				else if (StdDraw.isKeyPressed(KEYCODE_ESC))
+					System.exit(0);
+			visClearMsg();
+			String msg = "";
+
+			if (!checkSolvable(board))
+				msg = "reset board";
+			resetBoard();
+
+			if (vis == 1) {
+				visMsg(msg + " vis solve");
+				solveVis();
+				visMsg("Solved");
+			} else {
+				solve();
+				visBoard();
+			}
+		}
 	}
 
 	public static void initVis() {
