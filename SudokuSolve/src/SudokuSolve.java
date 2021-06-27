@@ -22,7 +22,7 @@ public class SudokuSolve {
 		final boolean textMode = false;
 		if (!textMode) {
 			initVis();
-			visMessage("hello");
+			visMsg("hello");
 		}
 
 		if (args.length == 0) {
@@ -39,7 +39,7 @@ public class SudokuSolve {
 			boolean win = playBoard();
 			waitForNoInput();
 			if (!win) {
-				visMessage("enter for vis solve, shift for instant solve");
+				visMsg("enter for vis solve, shift for instant solve");
 				int vis = -1;
 				while (vis == -1)
 					if (StdDraw.isKeyPressed(KEYCODE_ENTER))
@@ -56,9 +56,9 @@ public class SudokuSolve {
 				resetBoard();
 
 				if (vis == 1) {
-					visMessage(msg + " vis solve");
+					visMsg(msg + " vis solve");
 					solveVis();
-					visMessage("Solved");
+					visMsg("Solved");
 				} else {
 					solve();
 					visBoard();
@@ -77,7 +77,7 @@ public class SudokuSolve {
 		drawGrid();
 	}
 
-	public static void visMessage(String text) {
+	public static void visMsg(String text) {
 		visClearMsg();
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.text(SIZE / 2.0, SIZE + 5.0, text);
@@ -115,11 +115,6 @@ public class SudokuSolve {
 
 	public static void highlightSquare(int row, int col, Color c) {
 		drawGrid();
-		StdDraw.setPenColor(c);
-		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18.0);
-	}
-
-	public static void highlightSquareNoClear(int row, int col, Color c) {
 		StdDraw.setPenColor(c);
 		StdDraw.square(boardPos[row][col][0], boardPos[row][col][1], SIZE / 18.0);
 	}
@@ -202,8 +197,8 @@ public class SudokuSolve {
 			highlightSquare(nRow, nCol);
 			visBoard();
 			if (validBoard()) {
-				highlightSquareG(nRow, nCol);
-				visBoard();
+				highlightSquare(nRow, nCol, StdDraw.GREEN);
+				StdDraw.pause(GREENWAIT);
 				solveVis();
 			}
 			if (complete()) {
@@ -266,7 +261,6 @@ public class SudokuSolve {
 				return;
 			boardS[nRow][nCol] = 0;
 		}
-
 	}
 
 	public static boolean checkSolvable(int[][] boardT) {
@@ -551,7 +545,6 @@ public class SudokuSolve {
 			c = highlightColor(i, j);
 
 			highlightSquare(i, j, c);
-			StdOut.println("i: " + i + " j: " + j);
 			visBoard();
 			while (!StdDraw.hasNextKeyTyped())
 				if (StdDraw.isKeyPressed(KEYCODE_ENTER))
@@ -583,7 +576,7 @@ public class SudokuSolve {
 
 			}
 		}
-		visMessage("Winnner!!");
+		visMsg("Winnner!!");
 		return true;
 	}
 
